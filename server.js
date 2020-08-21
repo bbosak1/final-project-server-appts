@@ -24,7 +24,8 @@ app.use(function (req, res, next) {
 
 var Appt = mongoose.model('Appt', {
     date: String,
-    appt: String
+    time: String,
+    name: String,
 });
 
 // Get all appts
@@ -41,6 +42,31 @@ app.get('/api/appts', function (req, res) {
         }
         res.json(appts); // return all appts in JSON format
     });
+});
+
+// Create a appt
+app.post('/api/appts', function (req, res) {
+
+    console.log("Creating appt...");
+
+    Appt.create({
+        date: req.body.date,
+        time: req.body.time,
+        name: req.body.name,
+        done: false
+    }, function (err, appt) {
+        if (err) {
+            res.send(err);
+        }
+
+        // create and return appts
+        Appt.find(function (err, appts) {
+            if (err)
+                res.send(err);
+            res.json(appts);
+        });
+    });
+
 });
 
 
